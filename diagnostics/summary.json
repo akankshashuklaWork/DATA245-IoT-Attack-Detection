@@ -1,0 +1,71 @@
+{
+  "original_rows": 211043,
+  "exact_duplicates": 20569,
+  "deduped_rows": 190474,
+  "mitm_original": 1043,
+  "mitm_deduped": 1041,
+  "mitm_unique_patterns": 1007,
+  "mitm_pattern_diversity_pct": 96.734,
+  "mitm_patterns_shared_with_other_labels": 7,
+  "mitm_rows_shared_with_other_labels": 7,
+  "all_rows_matching_mitm_pattern_by_label": {
+    "ransomware": 1353,
+    "mitm": 1041,
+    "ddos": 29,
+    "xss": 23,
+    "normal": 16,
+    "injection": 2,
+    "password": 2,
+    "scanning": 1
+  },
+  "all_rows_matching_shared_mitm_pattern_by_label": {
+    "ransomware": 1353,
+    "ddos": 29,
+    "xss": 23,
+    "normal": 16,
+    "mitm": 7,
+    "injection": 2,
+    "password": 2,
+    "scanning": 1
+  },
+  "seeds": [
+    42,
+    7,
+    17,
+    23,
+    29,
+    41,
+    73,
+    101,
+    202,
+    313
+  ],
+  "repeat_summary": [
+    {
+      "model": "Decision Tree",
+      "runs": 10,
+      "mitm_test_min": 151,
+      "mitm_test_max": 159,
+      "mitm_recall_mean": 0.6520938629581382,
+      "mitm_recall_std": 0.02679367923065,
+      "mitm_recall_min": 0.6129032258064516,
+      "mitm_recall_max": 0.6862745098039216,
+      "mitm_precision_mean": 0.5974459765330746,
+      "macro_f1_mean": 0.8035511134960442,
+      "macro_f1_std": 0.07421918594682023
+    },
+    {
+      "model": "kNN",
+      "runs": 10,
+      "mitm_test_min": 151,
+      "mitm_test_max": 159,
+      "mitm_recall_mean": 0.6307132179716057,
+      "mitm_recall_std": 0.04504748887272137,
+      "mitm_recall_min": 0.5562913907284768,
+      "mitm_recall_max": 0.7124183006535948,
+      "mitm_precision_mean": 0.6657367943677942,
+      "macro_f1_mean": 0.8058701278130543,
+      "macro_f1_std": 0.06797778096525017
+    }
+  ]
+}

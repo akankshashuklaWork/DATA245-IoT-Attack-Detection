@@ -1,0 +1,21 @@
+{
+  "original_rows": 211043,
+  "columns": 44,
+  "exact_full_row_duplicates_removed": 20569,
+  "deduplicated_rows": 190474,
+  "class_count_including_normal": 10,
+  "mitm_rows_before_deduplication": 1043,
+  "mitm_rows_after_deduplication": 1041,
+  "unique_five_feature_patterns_after_deduplication": 92347,
+  "identical_feature_patterns_with_conflicting_labels": 224,
+  "rows_in_conflicting_label_patterns": 37997,
+  "input_features": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "src_ip_bytes",
+    "dst_ip_bytes"
+  ],
+  "target": "type",
+  "all_features_nonnegative": true
+}

@@ -1,0 +1,3 @@
+model,train_rows,training_seconds,n_model_features
+Decision_Tree,140812,0.5589592890000858,5
+kNN,140812,0.4103243059998931,5

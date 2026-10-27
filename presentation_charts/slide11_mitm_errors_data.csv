@@ -1,0 +1,6 @@
+predicted_label,missed_mitm_records
+Normal,12
+Password,11
+DoS,10
+Injection,5
+Other,7

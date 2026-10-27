@@ -1,0 +1,29 @@
+Loaded existing validated group-disjoint split.
+Dataset audit: {
+  "original_rows": 211043,
+  "columns": 44,
+  "exact_full_row_duplicates_removed": 20569,
+  "deduplicated_rows": 190474,
+  "class_count_including_normal": 10,
+  "mitm_rows_before_deduplication": 1043,
+  "mitm_rows_after_deduplication": 1041,
+  "unique_five_feature_patterns_after_deduplication": 92347,
+  "identical_feature_patterns_with_conflicting_labels": 224,
+  "rows_in_conflicting_label_patterns": 37997,
+  "input_features": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "src_ip_bytes",
+    "dst_ip_bytes"
+  ],
+  "target": "type",
+  "all_features_nonnegative": true
+}
+Class split counts:
+ type        backdoor   ddos    dos  injection  mitm  normal  password  ransomware  scanning    xss   total
+split                                                                                                     
+test            2673   2856   2713       2852   149    6006      2837        2105       932   1708   24831
+train          13365  14280  13566      14260   743   30028     14187       10525     18137  11721  140812
+validation      2673   2857   2713       2852   149    6006      2837        2105       931   1708   24831
+Stage 1-2 complete; data audited, duplicates removed BEFORE splitting.

@@ -1,0 +1,10 @@
+{
+  "slides": {
+    "7": "results/class_distribution_original.csv",
+    "8": "diagnostics/class_pattern_diversity.csv + results/data_audit.json",
+    "10": "results/baseline_metrics.csv (test rows only)",
+    "11 (errors)": "diagnostics/original_stage3_mitm_prediction_breakdown.csv",
+    "11 (mean recall)": "diagnostics/repeated_per_class_scores.csv"
+  },
+  "note": "Figures in the PowerPoint are editable shapes, drawn separately using rounded values from the above files. These plots recreate the quantities, not the exact PowerPoint design."
+}

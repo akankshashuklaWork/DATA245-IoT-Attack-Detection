@@ -1,0 +1,11 @@
+type,count
+normal,42040
+scanning,20000
+ddos,19993
+injection,19964
+password,19861
+dos,18992
+backdoor,18711
+xss,15137
+ransomware,14735
+mitm,1041

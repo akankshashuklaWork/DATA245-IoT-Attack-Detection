@@ -1,0 +1,4 @@
+metric,Decision_Tree_pct,kNN_pct
+Accuracy,93.17790000000001,89.0661
+Macro-F1,90.3376,84.88839999999999
+MITM recall,69.7987,65.7718
