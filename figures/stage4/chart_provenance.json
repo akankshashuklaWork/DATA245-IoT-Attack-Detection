@@ -1,0 +1,33 @@
+{
+  "generated_at_utc": "2026-11-25T08:44:27.495880+00:00",
+  "study_status": "exploratory/comparative fixed-test figures",
+  "source_files": {
+    "results/stage4/fixed_test_comparison.csv": "902092a9939c8a0ee3ebd64c8231ecfb1d3da2bff116fdf2f98338b9c2878773",
+    "results/stage4/ablation_classwise_metrics.csv": "29a767f6dd4168d2870fd6abb46c8b6ad837c7c00147ac9fd2933883d0d7c2cb",
+    "results/stage4/ablation_predictions.csv": "907f25ff4a133e1a94b60a5e1ca33a668581dfca17276b40344494d5c4e7c8ea",
+    "results/stage4/stability_paired_deltas.csv": "c44d3643ea260f3964e90bcb693809623977d30c77447300c781e3b17778ce1c"
+  },
+  "charts": {
+    "difficult_class_recall": {
+      "image": "figures/stage4/01_difficult_class_recall.png",
+      "companion_data": "figures/stage4/01_difficult_class_recall_data.csv"
+    },
+    "macro_f1_false_alarm": {
+      "image": "figures/stage4/02_macro_f1_false_alarm.png",
+      "companion_data": "figures/stage4/02_macro_f1_false_alarm_data.csv"
+    },
+    "latency_recall_tradeoff": {
+      "image": "figures/stage4/03_latency_recall_tradeoff.png",
+      "companion_data": "figures/stage4/03_latency_recall_tradeoff_data.csv"
+    },
+    "difficult_class_error_breakdown": {
+      "image": "figures/stage4/04_difficult_class_error_breakdown.png",
+      "companion_data": "figures/stage4/04_difficult_class_error_breakdown_data.csv"
+    },
+    "split_stability": {
+      "image": "figures/stage4/05_split_stability.png",
+      "companion_data": "figures/stage4/05_split_stability_data.csv"
+    }
+  },
+  "note": "All values are plotted from saved Stage 4 tables; no slide values are hardcoded."
+}
