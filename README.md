@@ -1,10 +1,10 @@
 # Feature-Efficient Detection of Difficult IoT Attacks with Classical Machine Learning
 
-**DATA245 | Machine Learning Course Project | Stage 1-3 completed (midterm baseline)**
+**DATA245 | Machine Learning Course Project | Stage 1-5 implemented**
 
-A reproducible, five-feature intrusion-detection study using the **UNSW ToN-IoT network dataset**, a **Decision Tree**, and **k-Nearest Neighbors (kNN)**. This repository investigates a practical security problem: a classifier can achieve high overall accuracy while still missing certain attack types.
+A reproducible feature-ablation study using the **UNSW ToN-IoT network dataset**, a **Decision Tree**, **k-Nearest Neighbors (kNN)**, and a professor-suggested **Random Forest**. This repository investigates a practical security problem: a classifier can achieve high overall accuracy while still missing certain attack types.
 
-> **Project status:** Dataset audit, EDA, five-feature baselines, classification-error analysis, and repeated-split diagnostics are implemented. Adding `proto` and `conn_state` is **planned future work**, not an evaluated result.
+> **Project status:** The Stage 1-3 five-feature baseline and Stage 4 Decision Tree/kNN ablation are preserved. Stage 5 adds the professor-suggested Random Forest using the same F5, F5+`proto`, F5+`conn_state`, and F7 design, unchanged rows, traceable metrics, and matched ten-seed sensitivity analysis.
 >
 > **Important:** This is a course research prototype, **not a production-ready intrusion detection system**. It uses classical machine learning only; no neural networks or neural feature extractors.
 
@@ -14,14 +14,15 @@ A reproducible, five-feature intrusion-detection study using the **UNSW ToN-IoT 
 |---|---|
 | Problem | Detect rare and hard-to-classify attacks without relying on overall accuracy alone |
 | Dataset | ToN-IoT network traffic; **211,043 observations**, **44 columns**, **10 classes** |
-| Inputs to the models | Exactly **5 numerical traffic features** |
-| Algorithms | Decision Tree (Gini) and kNN (`k=5`) |
+| Inputs to the models | Prespecified F5 baseline plus `proto` and/or `conn_state` ablations |
+| Algorithms | Decision Tree, kNN (`k=5`), and Random Forest (300 trees) |
 | Experiment design | Exact-row deduplication **before** a group-disjoint train/validation/test split |
 | Main metrics | Accuracy, macro-F1, class-wise precision/recall/F1, and prediction time |
 | Focus classes | MITM, ransomware, XSS |
-| Fixed test results | Decision Tree: **93.2% accuracy**, **69.8% MITM recall**; kNN: **89.1% accuracy**, **65.8% MITM recall** |
-| Repeated diagnostic | 10 additional group-disjoint splits to assess **split sensitivity** |
-| Next research question | Can 2 more protocol-related fields improve difficult-class recall at acceptable computational cost? |
+| Stage 4 fixed-test result | F7 has the best macro-F1 for both models, but MITM effects are mixed by model/configuration |
+| Stage 5 recommendation | Random Forest F5_PROTO based on validation; RF F7 is the strongest exploratory fixed-test result |
+| Repeated diagnostic | 10 matched group-disjoint splits to assess **split sensitivity** |
+| Next research need | Independent temporal/environment/device evidence for a confirmatory claim |
 
 ### Contents
 
@@ -34,7 +35,7 @@ A reproducible, five-feature intrusion-detection study using the **UNSW ToN-IoT 
 7. [Results and how to interpret them](#7-results-and-how-to-interpret-them)
 8. [Presentation charts and their source code](#8-presentation-charts-and-their-source-code)
 9. [Reproducibility and leakage controls](#9-reproducibility-and-leakage-controls)
-10. [Limitations and planned work](#10-limitations-and-planned-work)
+10. [Limitations and next validation work](#10-limitations-and-next-validation-work)
 11. [GitHub collaboration for five members](#11-github-collaboration-for-five-members)
 12. [Troubleshooting](#12-troubleshooting)
 13. [References and acknowledgments](#13-references-and-acknowledgments)
@@ -53,7 +54,9 @@ Network-connected IoT devices (such as sensors, cameras, and smart appliances) c
 
 **RQ1 - Completed baseline:** How reliably can Decision Tree and kNN classify difficult IoT attacks using only five numerical network-traffic features?
 
-**RQ2 - Planned extension:** Will adding two contextual fields, `proto` (protocol) and `conn_state` (connection state), improve the detection of difficult classes without an unacceptable increase in model complexity or prediction cost?
+**RQ2 - Completed exploratory comparison:** Do `proto` (protocol) and `conn_state` (connection state), alone or together, improve difficult-class detection without an unacceptable increase in model complexity or prediction cost?
+
+**RQ3 - Completed Random Forest extension:** Does a 300-tree Random Forest improve difficult-class detection and stability under the same controlled four-configuration design?
 
 We are **not proposing a new ML algorithm**. Our contribution is a carefully scoped empirical investigation of feature efficiency, class-wise errors, and sensitivity to how data are split.
 
@@ -198,20 +201,33 @@ DATA245_IoT_Complete_Modular_Project/
 |   |-- 03_model_evaluation.py      # Metrics, predictions, confusion matrices
 |   |-- 04_classification_errors.py # Where predictions went wrong
 |   |-- 05_repeated_split_experiments.py # 10 additional train/test experiments
+|   |-- 06_feature_augmentation.py  # Stage 4 schemas, audits, preprocessing
+|   |-- 07_feature_ablation.py      # Eight fixed-split model/configuration runs
+|   |-- 08_comparative_evaluation.py # Trace checks, errors, false alarms, latency
+|   |-- 09_final_visualizations.py  # Traceable Stage 4 figures
+|   |-- 10_stage4_split_stability.py # Matched ten-seed Stage 4 sensitivity
+|   |-- 11_random_forest_ablation.py # Four prespecified Random Forest fits
+|   |-- 12_random_forest_evaluation.py # Verified three-model comparison and timing
+|   |-- 13_random_forest_visualizations.py # Random Forest comparison figures
+|   |-- 14_random_forest_split_stability.py # Matched ten-seed forest sensitivity
 |   |-- make_presentation_charts.py # Read saved outputs and export charts
 |   `-- run_all.py                  # Run the scripts in order
 |
-|-- results/                        # CSV / JSON outputs from baseline stages
+|-- docs/                           # Stage 4 methods and execution report
+|-- results/stage4/                 # Stage 4 metrics, predictions, manifests
 |-- diagnostics/                    # Error analysis and repeated-split outputs
-|-- models/                         # Saved .joblib model files
-|-- figures/                        # EDA, evaluation and diagnostic plots
+|-- models/stage4/                  # Eight Stage 4 fitted pipelines
+|-- figures/stage4/                 # Stage 4 charts plus plotted-data CSVs
+|-- results/stage5_random_forest/   # Forest predictions, comparisons, stability
+|-- models/stage5_random_forest/    # Four saved 300-tree pipelines
+|-- figures/stage5_random_forest/   # Three-model and forest charts
 |-- presentation_charts/            # Recreated plots + numerical chart tables
 |-- presentation/                   # 12-slide midterm .pptx
 |-- tests/                          # Saved-output verification script
 `-- archive_original_scripts/       # Original combined scripts for traceability
 ```
 
-**Where to start if you are new:** Read `RUN_ORDER.txt`, then `src/01_eda_preprocessing.py`, and progress through the numbered scripts. Shared settings are in `src/common.py`.
+**Where to start if you are new:** Read `RUN_ORDER.txt` and `docs/STAGE4_METHODS.md`. Shared baseline settings remain in `src/common.py`.
 
 ---
 
@@ -324,6 +340,51 @@ python tests/check_saved_outputs.py
 
 This script checks the expected dataset shape, deduplicated row count, group-disjoint split, baseline metrics, MITM test counts, 10-split diagnostic records, and presence of the five presentation charts. It checks the **provided project's known outputs**; it is not a comprehensive software test suite.
 
+### Step G - Run or verify Stage 4
+
+The full Stage 4 run uses new output namespaces and does not overwrite Stage 1-3 results:
+
+```bash
+# Audit schemas, categories, checksums, and fixed partitions
+python src/06_feature_augmentation.py
+
+# Fit all four feature sets with both classifiers; validation is evaluated first
+python src/07_feature_ablation.py --split fixed --output-dir results/stage4
+
+# Verify metrics from row-level predictions and benchmark latency
+python src/08_comparative_evaluation.py
+
+# Optional matched split sensitivity: smoke test, then all ten seeds
+python src/10_stage4_split_stability.py --seeds 42 --output-dir /tmp/stage4_one_seed
+python src/10_stage4_split_stability.py --seeds 42,7,17,23,29,41,73,101,202,313
+
+# Create traceable figures and run acceptance tests
+python src/09_final_visualizations.py
+python -m pytest -q tests/test_stage4.py
+python tests/check_saved_outputs.py
+```
+
+`07_feature_ablation.py` refuses to overwrite a completed manifest unless `--force` is supplied explicitly. For a test-free smoke run, use `--smoke` with temporary output/model folders; smoke mode predicts validation only.
+
+### Step H - Run or verify the Random Forest extension
+
+```bash
+# Four forests: F5, F5_PROTO, F5_STATE, and F7
+python src/11_random_forest_ablation.py
+
+# Verify scores and benchmark all 12 model/configuration combinations together
+python src/12_random_forest_evaluation.py
+
+# Optional sensitivity extension: one seed before all ten
+python src/14_random_forest_split_stability.py --seeds 42 --output-dir /tmp/stage5-rf-one-seed
+python src/14_random_forest_split_stability.py --seeds 42,7,17,23,29,41,73,101,202,313
+
+python src/13_random_forest_visualizations.py
+python -m pytest -q tests/test_stage5_random_forest.py
+```
+
+The forest is deliberately untuned: 300 Gini trees, `max_features="sqrt"`, no class weighting, and random seed 42. Any later weighting or tuning must be validation-only and reported separately.
+
 ---
 
 ## 6. What each Python script does
@@ -338,6 +399,15 @@ Each main experiment lives in a separate file. This makes the workflow easier to
 | 4 | `src/04_classification_errors.py` | Saved actual/predicted labels | Wrong-label counts and MITM error chart | No |
 | 5 | `src/05_repeated_split_experiments.py` | Cleaned data | 10-run scores, per-class metrics, stability chart | **Yes: 2 models x 10 splits** |
 | 6 | `src/make_presentation_charts.py` | Saved results and diagnostics | Presentation PNGs and chart-data CSVs | No |
+| 7 | `src/06_feature_augmentation.py` | Raw CSV and unchanged fixed split | Feature/schema/category audit | No |
+| 8 | `src/07_feature_ablation.py` | Fixed split and four feature whitelists | Eight models, metrics, class scores, predictions, manifest | **Yes: 8 models** |
+| 9 | `src/08_comparative_evaluation.py` | Saved Stage 4 predictions/models | Verified comparisons, false alarms, repeated latency | No training |
+| 10 | `src/09_final_visualizations.py` | Saved Stage 4 tables | PNGs, companion CSVs, provenance | No |
+| 11 | `src/10_stage4_split_stability.py` | Deduplicated data | Matched per-seed metrics and paired deltas | **Yes: optional 80 models** |
+| 12 | `src/11_random_forest_ablation.py` | Same fixed split and feature whitelists | Four forests, predictions, metrics, importances, manifest | **Yes: 4 forests** |
+| 13 | `src/12_random_forest_evaluation.py` | Stage 4/5 results and saved models | Verified three-model comparison and same-session latency | No training |
+| 14 | `src/13_random_forest_visualizations.py` | Stage 5 result tables | Five PNGs, companion CSVs, provenance | No |
+| 15 | `src/14_random_forest_split_stability.py` | Deduplicated data | Matched forest per-seed results and paired deltas | **Yes: optional 40 forests** |
 
 ### Stage 1-2 - EDA and preprocessing
 
@@ -470,9 +540,39 @@ The next values come from the **separate repeated-split analysis**, not the sing
 
 **Interpretation:** Certain categories, especially ransomware and XSS, are sensitive to how feature groups are allocated to the different partitions. The large ranges warn against judging model reliability from one favorable split. The diagnostics are exploratory, not proof of poor performance on an independent real-world deployment.
 
-### What has NOT been shown yet
+### Stage 4: fixed-split feature ablation
 
-We have **not** evaluated the proposed seven-feature model and have **not** demonstrated that adding `proto` and `conn_state` improves any metric. Results above are exclusively from **five-feature baselines**.
+These results use the same 24,831 fixed test rows for all configurations. They are **exploratory/comparative** because Stage 3 already inspected this test partition.
+
+| Model / configuration | Macro-F1 | MITM recall | Ransomware recall | XSS recall | Normal-to-attack FPR |
+|---|---:|---:|---:|---:|---:|
+| Decision Tree / F5 | 90.34% | 69.80% | 72.64% | 84.02% | 8.06% |
+| Decision Tree / F5_PROTO | 93.60% | **71.81%** | 98.24% | 83.90% | 0.90% |
+| Decision Tree / F5_STATE | 92.23% | 65.77% | 97.72% | 85.07% | 7.14% |
+| Decision Tree / F7 | **93.85%** | 68.46% | **100.00%** | **85.36%** | **0.78%** |
+| kNN / F5 | 84.88% | 65.77% | 19.29% | 84.54% | 6.08% |
+| kNN / F5_PROTO | 88.32% | 67.11% | 38.15% | 84.78% | 0.90% |
+| kNN / F5_STATE | 87.87% | **68.46%** | 36.53% | 86.65% | 4.55% |
+| kNN / F7 | **88.79%** | **68.46%** | **38.72%** | **86.83%** | **0.73%** |
+
+**Interpretation:** Adding contextual fields materially improves ransomware recall, macro-F1, and normal-to-attack false alarms on this split. MITM is mixed: protocol alone is best for Decision Tree (+2.01 percentage points over F5), while state/F7 are best for kNN (+2.68 points). Decision Tree F7 reduces MITM recall by 1.34 points, so F7 is not a universal class-wise improvement. The optional matched ten-seed study also shows substantial ransomware/XSS split sensitivity.
+
+See [`docs/STAGE4_METHODS.md`](docs/STAGE4_METHODS.md) for preprocessing, latency, parity, and limitation details; numerical sources are in `results/stage4/`.
+
+### Stage 5: Random Forest comparison
+
+Random Forest was evaluated with the same four feature sets and fixed samples. The primary recommendation is based on validation, not on choosing the best already-examined test result.
+
+| Random Forest configuration | Validation macro-F1 | Validation MITM recall | Test macro-F1 | Test MITM recall | Test normal false alarms |
+|---|---:|---:|---:|---:|---:|
+| F5 | 94.80% | 76.51% | 90.71% | 71.81% | 476 |
+| F5_PROTO | **95.07%** | **79.19%** | 94.21% | 74.50% | **39** |
+| F5_STATE | 90.19% | 75.17% | 93.39% | **76.51%** | 420 |
+| F7 | 90.47% | 78.52% | **94.56%** | 74.50% | 40 |
+
+**Recommendation:** Random Forest F5_PROTO is the validation-selected primary candidate. Random Forest F7 is the strongest balanced fixed-test result—97.65% accuracy, 94.56% macro-F1, 100% ransomware recall, and 86.18% XSS recall—but should remain a secondary exploratory candidate rather than replacing the validation choice after seeing test scores. F5_STATE's high test MITM recall comes with an unacceptable false-alarm trade-off.
+
+The ten-seed study supports positive mean gains from categorical context, but ransomware and XSS remain split-sensitive. See [`docs/STAGE5_RANDOM_FOREST.md`](docs/STAGE5_RANDOM_FOREST.md) for the full comparison and rationale.
 
 ---
 
@@ -506,6 +606,10 @@ Files appear in `presentation_charts/`, including a matching small `*_data.csv` 
 
 **PowerPoint note:** `presentation/DATA245_IoT_Midterm_12_Slides.pptx` uses separately drawn, editable PowerPoint chart shapes. The exported Python PNGs reproduce **the underlying values**, but not necessarily the exact visual styling of the slides.
 
+Stage 4 figures are separate from the preserved midterm deck. Run `python src/09_final_visualizations.py` to regenerate five PNGs in `figures/stage4/`; each has a companion `*_data.csv`, and `chart_provenance.json` records source checksums.
+
+Stage 5 figures compare all three algorithms and describe grouped forest importance. Run `python src/13_random_forest_visualizations.py` to regenerate the five traceable files in `figures/stage5_random_forest/`.
+
 ---
 
 ## 9. Reproducibility and leakage controls
@@ -514,11 +618,12 @@ Files appear in `presentation_charts/`, including a matching small `*_data.csv` 
 |---|---|
 | Deduplication | Exact **full-row** duplicates are removed **before** splitting |
 | Feature-group separation | Identical five-feature patterns cannot cross train/validation/test partitions within one run |
-| Preprocessing | Imputation and standardization are fitted as parts of training pipelines |
+| Preprocessing | Numeric and categorical transformations are fitted on training rows inside pipelines |
 | Fixed baseline | Supplied split assignments are validated and reused by default |
 | Experiment traceability | Per-class metrics, predictions, confusion matrices, and diagnostic CSVs are stored |
 | Chart traceability | `chart_provenance.json` and `*_data.csv` files explain numerical charts |
 | Repeatability | Ten diagnostic random seeds and a one-seed verification command are documented |
+| Preservation | Stage 4 protects Stage 1-3 hashes; Stage 5 protects Stage 1-4 hashes before and after its run |
 
 **Why reusing the saved split matters:** If someone changes the train/test partition, they may obtain different scores. This does not necessarily mean the original script was wrong. Always record which split, code version, library versions, and model settings produced reported numbers.
 
@@ -526,7 +631,7 @@ Files appear in `presentation_charts/`, including a matching small `*_data.csv` 
 
 ---
 
-## 10. Limitations and planned work
+## 10. Limitations and next validation work
 
 ### Current limitations
 
@@ -538,16 +643,9 @@ Files appear in `presentation_charts/`, including a matching small `*_data.csv` 
 6. **Exploratory use of test errors:** We inspected the fixed test set for diagnosis. A future final-phase improvement needs a separately planned confirmatory evaluation rather than repeatedly optimizing against the same test labels.
 7. **Efficiency varies by hardware:** Measured prediction times depend on device, implementation, data shape, and software version.
 
-### Planned Stage 4 - Targeted feature augmentation
+### Next work - independent confirmation
 
-We plan to compare the **current five-feature models** against versions that add exactly two context fields:
-
-- `proto`: protocol information;
-- `conn_state`: connection-state information.
-
-The planned comparison will use consistent data splits and appropriate encoding of categorical values, then examine **MITM/ransomware/XSS recall**, macro-F1, precision/false positives, and inference cost. Feature ablation will help determine whether each extra field contributes useful information.
-
-**No seven-feature findings are reported in this repository.** Any future results must be computed and documented before being claimed.
+Stage 4 completed the targeted `proto`/`conn_state` ablation, and Stage 5 added an untuned Random Forest. The next scientifically meaningful step is not another reshuffle selected from the same rows. A confirmatory claim requires a separately collected dataset, a temporal holdout, or an environment/device holdout that has not been inspected for model selection. Class weighting or hyperparameter tuning, if requested, must be validation-only and reported as a separate experiment.
 
 ---
 
@@ -688,10 +786,15 @@ UNSW Canberra. *ToN-IoT Datasets*. https://research.unsw.edu.au/projects/toniot-
 - Full methods and baseline details: [`STAGE_1_TO_3_REPORT.md`](STAGE_1_TO_3_REPORT.md)
 - Additional difficult-class analysis: [`diagnostics/DIAGNOSTIC_REPORT.md`](diagnostics/DIAGNOSTIC_REPORT.md)
 - Presentation chart provenance: [`presentation_charts/chart_provenance.json`](presentation_charts/chart_provenance.json)
+- Stage 4 methods and caveats: [`docs/STAGE4_METHODS.md`](docs/STAGE4_METHODS.md)
+- Stage 4 commands and outcomes: [`docs/STAGE4_EXECUTION_REPORT.md`](docs/STAGE4_EXECUTION_REPORT.md)
+- Stage 4 chart provenance: [`figures/stage4/chart_provenance.json`](figures/stage4/chart_provenance.json)
+- Stage 5 Random Forest methods and recommendation: [`docs/STAGE5_RANDOM_FOREST.md`](docs/STAGE5_RANDOM_FOREST.md)
+- Stage 5 chart provenance: [`figures/stage5_random_forest/chart_provenance.json`](figures/stage5_random_forest/chart_provenance.json)
 - Original combined Python scripts for audit: [`archive_original_scripts/`](archive_original_scripts/)
 
 **Team:** DATA245 course project group (five members). Add actual member names, GitHub handles, and contributions here after agreement among the team. Do not infer individual authorship from the order in which code was uploaded.
 
 ---
 
-*Last revised: October 2026. All numerical findings above refer to the included five-feature baseline and saved diagnostics unless clearly marked as future work.*
+*Last revised: November 2026. Baseline, Stage 4, and Random Forest Stage 5 findings are labeled separately.*

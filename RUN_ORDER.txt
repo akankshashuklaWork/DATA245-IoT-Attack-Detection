@@ -1,5 +1,5 @@
-DATA245 IoT — SIX EASY PYTHON SCRIPTS
-==================================
+DATA245 IoT — BASELINE AND STAGE 4 RUN ORDER
+============================================
 From the extracted project folder, run:
 
   python -m pip install -r requirements.txt
@@ -23,4 +23,33 @@ Verification:
 
   python tests/check_saved_outputs.py
 
+Stage 4 (new output namespaces; run in order):
+
+  python src/06_feature_augmentation.py
+  python src/07_feature_ablation.py --split fixed --output-dir results/stage4
+  python src/08_comparative_evaluation.py
+
+  # Optional matched split sensitivity: smoke test before all ten seeds
+  python src/10_stage4_split_stability.py --seeds 42 --output-dir /tmp/stage4_one_seed
+  python src/10_stage4_split_stability.py --seeds 42,7,17,23,29,41,73,101,202,313
+
+  python src/09_final_visualizations.py
+  python -m pytest -q tests/test_stage4.py
+  python tests/check_saved_outputs.py
+
 Full explanation and file descriptions: README.md
+Stage 4 methods and caveats: docs/STAGE4_METHODS.md
+
+Stage 5 Random Forest extension (professor-suggested):
+
+  python src/11_random_forest_ablation.py
+  python src/12_random_forest_evaluation.py
+
+  # Optional matched split sensitivity: smoke test, then all ten seeds
+  python src/14_random_forest_split_stability.py --seeds 42 --output-dir /tmp/stage5-rf-one-seed
+  python src/14_random_forest_split_stability.py --seeds 42,7,17,23,29,41,73,101,202,313
+
+  python src/13_random_forest_visualizations.py
+  python -m pytest -q tests/test_stage5_random_forest.py
+
+Stage 5 methods, comparison, and recommendation: docs/STAGE5_RANDOM_FOREST.md
